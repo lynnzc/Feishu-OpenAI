@@ -18,6 +18,7 @@ services:
       - BOT_NAME=chatGpt
       # OpenAI API Key 支持负载均衡, 可以填写多个 Key 用逗号分隔
       - OPENAI_KEY=sk-xxx,sk-xxx,sk-xxx
+      - HUGGINGFACE_KEY=hf_xxx,hf_xxx,hf_xxx
       # 服务器配置
       - HTTP_PORT=9000
       - HTTPS_PORT=9001

@@ -16,6 +16,7 @@ type Config struct {
 	FeishuAppVerificationToken string
 	FeishuBotName              string
 	OpenaiApiKeys              []string
+	HuggingFaceApiKeys         []string
 	HttpPort                   int
 	HttpsPort                  int
 	UseHttps                   bool
@@ -47,6 +48,7 @@ func LoadConfig(cfg string) *Config {
 		FeishuAppVerificationToken: getViperStringValue("APP_VERIFICATION_TOKEN", ""),
 		FeishuBotName:              getViperStringValue("BOT_NAME", ""),
 		OpenaiApiKeys:              getViperStringArray("OPENAI_KEY", nil),
+		HuggingFaceApiKeys:         getViperStringArray("HUGGINGFACE_KEY", nil),
 		HttpPort:                   getViperIntValue("HTTP_PORT", 9000),
 		HttpsPort:                  getViperIntValue("HTTPS_PORT", 9001),
 		UseHttps:                   getViperBoolValue("USE_HTTPS", false),
@@ -72,8 +74,8 @@ func getViperStringValue(key string, defaultValue string) string {
 	return value
 }
 
-//OPENAI_KEY: sk-xxx,sk-xxx,sk-xxx
-//result:[sk-xxx sk-xxx sk-xxx]
+// OPENAI_KEY: sk-xxx,sk-xxx,sk-xxx
+// result:[sk-xxx sk-xxx sk-xxx]
 func getViperStringArray(key string, defaultValue []string) []string {
 	value := viper.GetString(key)
 	if value == "" {
@@ -131,11 +133,11 @@ func (config *Config) GetKeyFile() string {
 	return config.KeyFile
 }
 
-// 过滤出 "sk-" 开头的 key
+// 过滤出 "sk-" or "hf_" 开头的 key
 func filterFormatKey(keys []string) []string {
 	var result []string
 	for _, key := range keys {
-		if strings.HasPrefix(key, "sk-") {
+		if strings.HasPrefix(key, "sk-") || strings.HasPrefix(key, "hf_") {
 			result = append(result, key)
 		}
 	}

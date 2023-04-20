@@ -7,6 +7,7 @@ import (
 
 	"start-feishubot/initialization"
 	"start-feishubot/services"
+	"start-feishubot/services/huggingface"
 	"start-feishubot/services/openai"
 
 	larkcard "github.com/larksuite/oapi-sdk-go/v3/card"
@@ -27,6 +28,7 @@ type MessageHandler struct {
 	sessionCache services.SessionServiceCacheInterface
 	msgCache     services.MsgCacheInterface
 	gpt          *openai.ChatGPT
+	hf           *huggingface.HuggingFace
 	config       initialization.Config
 }
 
@@ -94,13 +96,13 @@ func (m MessageHandler) msgReceivedHandler(ctx context.Context, event *larkim.P2
 		&EmptyAction{},           //空消息处理
 		&ClearAction{},           //清除消息处理
 		&PicAction{},             //图片处理
+		&MagicHFAction{},         //魔法模式
 		&AIModeAction{},          //模式切换处理
 		&RoleListAction{},        //角色列表处理
 		&HelpAction{},            //帮助处理
 		&BalanceAction{},         //余额处理
 		&RolePlayAction{},        //角色扮演处理
 		&MessageAction{},         //消息处理
-
 	}
 	chain(data, actions...)
 	return nil
@@ -108,12 +110,13 @@ func (m MessageHandler) msgReceivedHandler(ctx context.Context, event *larkim.P2
 
 var _ MessageHandlerInterface = (*MessageHandler)(nil)
 
-func NewMessageHandler(gpt *openai.ChatGPT,
+func NewMessageHandler(gpt *openai.ChatGPT, hf *huggingface.HuggingFace,
 	config initialization.Config) MessageHandlerInterface {
 	return &MessageHandler{
 		sessionCache: services.GetSessionCache(),
 		msgCache:     services.GetMsgCache(),
 		gpt:          gpt,
+		hf:           hf,
 		config:       config,
 	}
 }

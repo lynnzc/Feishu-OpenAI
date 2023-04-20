@@ -7,6 +7,7 @@ import (
 	"start-feishubot/handlers"
 	"start-feishubot/initialization"
 	"start-feishubot/services/openai"
+	"start-feishubot/services/huggingface"
 
 	"github.com/gin-gonic/gin"
 	sdkginext "github.com/larksuite/oapi-sdk-gin"
@@ -26,7 +27,8 @@ func main() {
 	config := initialization.LoadConfig(*cfg)
 	initialization.LoadLarkClient(*config)
 	gpt := openai.NewChatGPT(*config)
-	handlers.InitHandlers(gpt, *config)
+	hf  := huggingface.NewHuggingFace(*config)
+	handlers.InitHandlers(gpt, hf, *config)
 
 	eventHandler := dispatcher.NewEventDispatcher(
 		config.FeishuAppVerificationToken, config.FeishuAppEncryptKey).

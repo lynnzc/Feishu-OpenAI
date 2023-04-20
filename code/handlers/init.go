@@ -5,6 +5,7 @@ import (
 
 	"start-feishubot/initialization"
 	"start-feishubot/services/openai"
+	"start-feishubot/services/huggingface"
 
 	larkcard "github.com/larksuite/oapi-sdk-go/v3/card"
 	larkim "github.com/larksuite/oapi-sdk-go/v3/service/im/v1"
@@ -25,8 +26,9 @@ const (
 // handlers 所有消息类型类型的处理器
 var handlers MessageHandlerInterface
 
-func InitHandlers(gpt *openai.ChatGPT, config initialization.Config) {
-	handlers = NewMessageHandler(gpt, config)
+func InitHandlers(gpt *openai.ChatGPT, hf *huggingface.HuggingFace,
+	config initialization.Config) {
+	handlers = NewMessageHandler(gpt, hf, config)
 }
 
 func Handler(ctx context.Context, event *larkim.P2MessageReceiveV1) error {
