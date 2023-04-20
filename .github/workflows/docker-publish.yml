@@ -55,5 +55,5 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           # 给清单打上多个标签
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.REPO_NAME }}:${{ env.GITHUB_REF_NAME }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.REPO_NAME }}:latest
+            ${{ env.REPO_USERNAME }}/${{ env.REPO_NAME }}:${{ env.GITHUB_REF_NAME }}
+            ${{ env.REPO_USERNAME }}/${{ env.REPO_NAME }}:latest
